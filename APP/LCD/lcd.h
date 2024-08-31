@@ -2,9 +2,6 @@
 #define __LCD_H		
 
 #include "driver_tool.h"
-#define u32 uint32
-#define u16 uint16
-#define u8 uint8
 
 void LCD_Fill(u16 xsta,u16 ysta,u16 xend,u16 yend,u16 color);//指定区域填充颜色
 void LCD_DrawPoint(u16 x,u16 y,u16 color);//在指定位置画一个点

@@ -12,13 +12,13 @@
 #include "freertos/task.h"
 #include "tinyusb.h"
 #include "class/hid/hid_device.h"
+
 #include "driver/gpio.h"
 #include "app_tinyusb.h"
-
+#include "driver_tool.h"
 
 #define APP_BUTTON (GPIO_NUM_0) // Use BOOT signal by default
 
-static const char *TAGDEBUG = "TINYUSB";
 
 /************* TinyUSB descriptors ****************/
 
@@ -69,7 +69,7 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
   (void) report_type;
   (void) buffer;
   (void) reqlen;
-  ESP_LOGW(TAGDEBUG, "tud_hid_get_report_cb!!!");
+  GUA_LOGE("tud_hid_get_report_cb!!!");
   return 0;
 }
 
@@ -77,23 +77,23 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_t
 // received data on OUT endpoint ( Report ID = 0, Type = 0 )
 void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
 {
-	ESP_LOGW(TAGDEBUG, "tud_hid_set_report_cb!!!");
+	GUA_LOGE("tud_hid_set_report_cb!!!");
 }
 
 TU_ATTR_WEAK void tud_hid_set_protocol_cb(uint8_t instance, uint8_t protocol)
 {
-	ESP_LOGW(TAGDEBUG, "tud_hid_set_protocol_cb!!!");
+	GUA_LOGE("tud_hid_set_protocol_cb!!!");
 }
 
 TU_ATTR_WEAK bool tud_hid_set_idle_cb(uint8_t instance, uint8_t idle_rate)
 {
-	ESP_LOGW(TAGDEBUG, "tud_hid_set_idle_cb!!!");
+	GUA_LOGE("tud_hid_set_idle_cb!!!");
 	return 0;
 }
 
 TU_ATTR_WEAK void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_t len)
 {
-	ESP_LOGW(TAGDEBUG, "tud_hid_report_complete_cb!!! %d %s %d", instance, report, len);
+//	GUA_LOGE("tud_hid_report_complete_cb!!! %d %s %d", instance, report, len);
 }
 
 typedef struct tinyusb_buttons{
@@ -251,19 +251,19 @@ void app_tinyusb(void)
         .pull_up_en = true,
         .pull_down_en = false,
     };
-    ESP_ERROR_CHECK(gpio_config(&boot_button_config));
+    gpio_config(&boot_button_config);
+    GUA_LOGI("USB initialization");
 
-    ESP_LOGI(TAGDEBUG, "USB initialization");
     const tinyusb_config_t tusb_cfg = {
         .device_descriptor = NULL,
-//        .string_descriptor = "xiaogua gamepad",
+//      .string_descriptor = "xiaogua gamepad",
 //		.string_descriptor_count = 15,
         .external_phy = false,
         .configuration_descriptor = hid_configuration_descriptor,
     };
 
     ESP_ERROR_CHECK(tinyusb_driver_install(&tusb_cfg));
-    ESP_LOGI(TAGDEBUG, "USB initialization DONE");
+    GUA_LOGI("USB initialization DONE");
 
     g_tinyusb_button_data.buttons = 0;
     while (1) {
@@ -280,8 +280,8 @@ void app_tinyusb(void)
 					g_tinyusb_button_data.buttons);
         	vTaskDelay(pdMS_TO_TICKS(10));
         } else {
-        	vTaskDelay(pdMS_TO_TICKS(100));
-        	ESP_LOGI(TAGDEBUG, "wait usb\n");
+        	vTaskDelay(pdMS_TO_TICKS(300));
+        	GUA_LOGI("wait usb\n");
         }
     }
 }

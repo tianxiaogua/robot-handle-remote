@@ -27,8 +27,6 @@ void bsp_timer_init() //定时器配置
 	//03 使能定时器中断
 	timer_enable_intr(BSP_TIMER_GROUP, BSP_TIMER); //使能定时器中断
 	timer_isr_callback_add(BSP_TIMER_GROUP, BSP_TIMER, timer_group_isr_callback, 0, 1);//注册中断服务函数
-
-
 }
 
 void bsp_timer_start() //定时器开始

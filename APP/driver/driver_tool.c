@@ -7,6 +7,8 @@
 
 #include "driver_tool.h"
 #include "kalman.h"
+#include "stdio.h"
+
 
 /******************************************************
  * @作者：田小呱

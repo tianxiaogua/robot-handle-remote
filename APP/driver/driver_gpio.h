@@ -20,7 +20,7 @@
 
 #define LCD_SPI_CS   GPIO_NUM_10
 #define LCD_SPI_DC   GPIO_NUM_45
-
+#define KEY_CHA_NUM   GPIO_NUM_8
 
 #define GPIO_KEY   0
 

@@ -5,6 +5,7 @@ file(GLOB_RECURSE SOURCES
 	../APP/driver/tools/*.c
 	../APP/LCD/*.c
 	../APP/PCA9557/*.c
+	../APP/MPU6050/*.c
 )
 
 set(inc
@@ -14,6 +15,7 @@ set(inc
 ../APP/driver/tools
 ../APP/LCD
 ../APP/PCA9557
+../APP/MPU6050
 )
 
 idf_component_register(

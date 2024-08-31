@@ -9,8 +9,10 @@
 #include "driver_tool.h"
 
 #define BEEP_GPIO GPIO_NUM_17
+
 void init_beep(void)
 {
+	int32 recv = 0;
 	// 设置LEDC周边配置
 	// 准备并应用LEDC PWM定时器配置
 	ledc_timer_config_t ledc_timer1 = {
@@ -20,7 +22,10 @@ void init_beep(void)
 		.freq_hz          = 1000,  // 频率单位为赫兹。频率设定为5千赫
 		.clk_cfg          = LEDC_AUTO_CLK
 	};
-	ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer1));
+	recv = ledc_timer_config(&ledc_timer1);
+	if (recv != ESP_OK) {
+		GUA_LOGE("LED timer config ERROR!");
+	}
 
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel1 = {
@@ -32,32 +37,34 @@ void init_beep(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel1));
-
+	recv = ledc_channel_config(&ledc_channel1);
+	if (recv != ESP_OK) {
+		GUA_LOGE("LED timer channel config ERROR!");
+	}
 }
 
 void set_beep_on(void)
 {
 	// 设置占空比50%   ((2 ** 13) - 1) * 50% = 4095
-	ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4095));
+	ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4095);
 	// Update duty to apply the new value
-	ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+	ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
 }
 
 void set_beep_tone(uint32 tone)
 { 
 	// 设置占空比50%   ((2 ** 13) - 1) * 50% = 4095
-	ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, tone));
+	ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, tone);
 	// Update duty to apply the new value
-	ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+	ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
 }
 
 void set_beep_off(void)
 {
 	// 设置占空比50%   ((2 ** 13) - 1) * 50% = 4095
-	ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0));
+	ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0);
 	// Update duty to apply the new value
-	ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+	ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
 }
 
 TaskHandle_t Handle_play_task = NULL;

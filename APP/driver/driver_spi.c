@@ -7,9 +7,6 @@
 
 #include "driver_spi.h"
 
-
-static const char TAG[] = "driver_spi";
-
 /*
 .3 GPIO矩阵和IO_MUX
 ESP32的大多数外设信号都直接连接到其专用的IO_MUX引脚。但是，也可以使用GPIO矩阵将信号转换到任何其他可用的引脚。如果至少一个信号通过GPIO矩阵转换，则所有信号都将通过GPIO矩阵转换。
@@ -38,8 +35,7 @@ spi_device_handle_t spi2;
 void spi2_init(void)
 {
 	esp_err_t ret;
-//	spi_device_handle_t spi;
-	ESP_LOGI(TAG, "Initializing bus SPI%d...", SPI2_HOST+1);
+	GUA_LOGI("Initializing bus SPI%d...", SPI2_HOST+1);
 
 	static spi_bus_config_t buscfg={
 		.miso_io_num = PIN_SPI2_NUM_MISO,                // MISO信号线
@@ -59,12 +55,13 @@ void spi2_init(void)
 
 	//Initialize the SPI bus
 	ret = spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO);
-	ESP_ERROR_CHECK(ret);
+	if (ret != ESP_OK) {
+		GUA_LOGE("Initialize the SPI bus ERROR!");
+	}
 	ret = spi_bus_add_device(SPI2_HOST, &devcfg, &spi2);
-	ESP_ERROR_CHECK(ret);
-
-//	gpio_pad_select_gpio(PIN_NUM_CS);                // 选择一个GPIO
-//	gpio_set_direction(PIN_NUM_CS, GPIO_MODE_OUTPUT);// 把这个GPIO作为输出
+	if (ret != ESP_OK) {
+		GUA_LOGE("SPI add device bus ERROR!");
+	}
 }
 
 
@@ -72,8 +69,7 @@ spi_device_handle_t spi3;
 void spi3_init(void)
 {
 	esp_err_t ret;
-//	spi_device_handle_t spi;
-	ESP_LOGI(TAG, "Initializing bus SPI%d...", SPI3_HOST+1);
+	GUA_LOGI("Initializing bus SPI%d...", SPI3_HOST+1);
 
 	spi_bus_config_t buscfg={
 		.miso_io_num = PIN_NUM_MISO,                // MISO信号线
@@ -93,10 +89,13 @@ void spi3_init(void)
 
 	//Initialize the SPI bus
 	ret = spi_bus_initialize(SPI3_HOST, &buscfg, SPI_DMA_CH_AUTO);
-	ESP_ERROR_CHECK(ret);
+	if (ret != ESP_OK) {
+		GUA_LOGE("Initialize the SPI bus ERROR!");
+	}
 	ret = spi_bus_add_device(SPI3_HOST, &devcfg, &spi3);
-	ESP_ERROR_CHECK(ret);
-
+	if (ret != ESP_OK) {
+		GUA_LOGE("SPI add device bus ERROR!");
+	}
 }
 
 
@@ -112,7 +111,7 @@ void spi_write(spi_device_handle_t spi, uint8_t *data, uint32_t len)
     t.user=(void*)1;                //D/C needs to be set to 1
     ret=spi_device_polling_transmit(spi, &t);  //Transmit!
     if(ret != ESP_OK) {
-		ESP_LOGE(TAG, "SPI2 write error!\n");
+    	GUA_LOGE("SPI2 write error!\n");
 	}
 }
 
@@ -120,15 +119,13 @@ esp_err_t spi_read(spi_device_handle_t spi, uint8_t *data, uint8 data_len)
 {
     spi_transaction_t t;
 
-//    GPIO_SetPin(PIN_NUM_CS, 0);
-
     memset(&t, 0, sizeof(t));
     t.length=8*data_len;
     t.flags = SPI_TRANS_USE_RXDATA;
     t.user = (void*)1;
     esp_err_t ret = spi_device_polling_transmit(spi, &t);
     if(ret != ESP_OK) {
-    	ESP_LOGE(TAG, "SPI2 read error!\n");
+    	GUA_LOGE("SPI read error!\n");
     }
     *data = t.rx_data[0];
 
@@ -139,7 +136,6 @@ esp_err_t spi_sendAndRecv(spi_device_handle_t spi, uint8_t *txdata, uint8 txdata
 {
     esp_err_t ret;
     spi_transaction_t t;
-	uint8_t send=0xBB;
 	uint8_t recv[4];
 
     memset(&t, 0, sizeof(t));
@@ -148,7 +144,10 @@ esp_err_t spi_sendAndRecv(spi_device_handle_t spi, uint8_t *txdata, uint8 txdata
     t.tx_buffer=&txdata;
     t.rx_buffer=recv;
     ret = spi_device_polling_transmit(spi, &t);
-    if(ret==ESP_OK) return 0;
-    else return -1;
+    if(ret != ESP_OK) {
+		GUA_LOGE("SPI sand and recv error!\n");
+		return ESP_FAIL;
+	}
+    return ESP_OK;
 }
 

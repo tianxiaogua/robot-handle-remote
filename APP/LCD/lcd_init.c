@@ -2,26 +2,6 @@
 #include "driver_tool.h"
 #include "driver_spi.h"
 
-void LCD_GPIO_Init(void)
-{
-//	GPIO_InitTypeDef  GPIO_InitStructure;
-//
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOD, ENABLE);	 //使能A端口时钟
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_7;
-// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;//速度50MHz
-// 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-// 	GPIO_SetBits(GPIOA,GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_7);
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6;
-// 	GPIO_Init(GPIOB, &GPIO_InitStructure);
-// 	GPIO_SetBits(GPIOB,GPIO_Pin_5|GPIO_Pin_6);
-//
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-// 	GPIO_Init(GPIOD, &GPIO_InitStructure);
-// 	GPIO_SetBits(GPIOD,GPIO_Pin_2);
-}
-
 
 /******************************************************************************
       函数说明：LCD串行数据写入函数
@@ -143,15 +123,15 @@ void LCD_Address_Set(u16 x1,u16 y1,u16 x2,u16 y2)
 
 void LCD_Init(void)
 {
-	LCD_GPIO_Init();//初始化GPIO
-	
+	set_pca9557_io_high(0);//CS();
+
 	LCD_RES_Clr();//复位
 	delay_ms(100);
 	LCD_RES_Set();
 	delay_ms(100);
 	
 	LCD_BLK_Set();//打开背光
-  delay_ms(100);
+  	delay_ms(100);
 	
 	LCD_WR_REG(0x11); 
 	delay_ms(120); 

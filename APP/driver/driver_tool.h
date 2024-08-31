@@ -16,8 +16,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define REV_SUCCESS  0
-#define REV_ERROR   -1
+#define REV_OK  0
+#define REV_ERR  -1
+
+
+// 打印输出参考：https://blog.csdn.net/KindBitch/article/details/122443446?spm=1001.2014.3001.5506
+//调试打印开关
+#define __DEBUG 2
+
+#if __DEBUG == 1
+#define GUA_LOGI(format, ...) printf("\033[32m["__FILE__"][Line: %d %s]:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGW(format, ...) printf("\033[33m["__FILE__"][Line: %d %s]:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGE(format, ...) printf("\033[31m["__FILE__"][Line: %d %s]:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#elif __DEBUG == 2
+#define GUA_LOGI(format, ...) printf("\033[32m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGW(format, ...) printf("\033[33m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGE(format, ...) printf("\033[31m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#elif __DEBUG == 3
+#define GUA_LOGI(format, ...) printf("\033[32m["__FILE__" Line: %d] "format"\033[32;0m\n", __LINE__, ##__VA_ARGS__)
+#define GUA_LOGW(format, ...) printf("\033[33m["__FILE__" Line: %d] "format"\033[32;0m\n", __LINE__, ##__VA_ARGS__)
+#define GUA_LOGE(format, ...) printf("\033[31m["__FILE__" Line: %d] "format"\033[32;0m\n", __LINE__, ##__VA_ARGS__)
+#else
+#define GUA_LOGI(format, ...)
+#define GUA_LOGW(format, ...)
+#define GUA_LOGE(format, ...)
+#endif
+
+
 /*
  * type:           ************size**************
 --------------------------------
@@ -71,6 +96,9 @@ typedef char  int8;
 //typedef signed char  uint8;
 typedef unsigned char  uint8;
 
+#define u32 uint32
+#define u16 uint16
+#define u8 uint8
 
 enum kalman_filter_channel {
 	filter_channer1 = 0,

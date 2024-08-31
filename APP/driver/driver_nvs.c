@@ -5,6 +5,7 @@
  *      Author: tianxiaohua
  */
 #include "driver_nvs.h"
+#include "driver_tool.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -18,8 +19,6 @@
 #include "esp_netif.h"
 
 #define NAMESPACE "list"
-
-#define DEBUGTAG "driver_nvs.c"
 
 NVS_GAMEPAD_TYPE nvs_gamepad = {
 	.lift_stick_x        = "lift_stick_x",
@@ -39,12 +38,12 @@ void driver_nvs_set_u32(nvs_handle nvs_handler, char* namespace_name, char* key,
 
 	ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-		ESP_LOGE(DEBUGTAG, "init flash error!\n");
+		GUA_LOGE("init flash error!");
 	}
 
 	ret = nvs_open(NAMESPACE, NVS_READWRITE, &nvs_handler);
 	if (ret != ESP_OK) {
-		ESP_LOGE(DEBUGTAG, "open flash error!\n");
+		GUA_LOGE("open flash error!");
 	}
 	nvs_set_u32(nvs_handler,"lift_stick_x",value);
 	nvs_commit(nvs_handler);
@@ -58,12 +57,12 @@ void driver_nvs_get_u32(nvs_handle nvs_handler, char* namespace_name, char* key,
 
 	ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-		ESP_LOGE(DEBUGTAG, "init flash error!\n");
+		GUA_LOGE("init flash error!");
 	}
 
 	ret = nvs_open(NAMESPACE, NVS_READONLY, &nvs_handler);
 	if (ret != ESP_OK) {
-		ESP_LOGE(DEBUGTAG, "open flash error!\n");
+		GUA_LOGE("open flash error!");
 	}
 
 	nvs_get_u32(nvs_handler, "lift_stick_x", out_value);

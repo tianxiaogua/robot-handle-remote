@@ -17,10 +17,15 @@
 
 #include "driver_gpio.h"
 
+#define I2C0 I2C_NUM_0
+#define I2C1 I2C_NUM_1
+
 esp_err_t dirver_i2c1_init(void);
 
-esp_err_t driver_i2c1_master_transmit_buf(uint8_t iic_address, uint8_t reg_address, uint8_t *data_buf, uint32_t data_len);
+esp_err_t dirver_i2c0_init(void);
 
-esp_err_t driver_i2c1_master_receive_buf(uint8_t iic_address, uint8_t reg_address, uint8_t *data_buf, uint32_t data_len);
+esp_err_t driver_i2c_master_transmit_buf(uint8_t i2c_master_port, uint8_t iic_address, uint8_t reg_address, uint8_t *data_buf, uint32_t data_len);
+
+esp_err_t driver_i2c_master_receive_buf(uint8_t i2c_master_port, uint8_t iic_address, uint8_t reg_address, uint8_t *data_buf, uint32_t data_len);
 
 #endif /* APP_DRIVER_DRIVER_IIC_H_ */

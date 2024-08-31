@@ -5,9 +5,6 @@
 #include "driver_tool.h"
 
 #include "pca9557.h"
-#define u32 uint32
-#define u16 uint16
-#define u8 uint8
 
 #define USE_HORIZONTAL 2  //设置横屏或者竖屏显示 0或1为竖屏 2或3为横屏
 
@@ -24,13 +21,6 @@
 #include "driver_spi.h"
 //-----------------LCD端口定义---------------- 
 
-//#define LCD_SCLK_Clr() GPIO_SetPin(LCD_SPI_SCL,GPIO_LOW)//SCL=SCLK
-//#define LCD_SCLK_Set() GPIO_SetPin(LCD_SPI_SCL,GPIO_HIGH)
-//
-//#define LCD_MOSI_Clr() GPIO_SetPin(LCD_SPI_SDA,GPIO_LOW)//SDA=MOSI
-//#define LCD_MOSI_Set() GPIO_SetPin(LCD_SPI_SDA,GPIO_HIGH)
-
-
 //#define LCD_RES_Clr()  GPIO_SetPin(LCD_SPI_REST, GPIO_LOW)//RES
 //#define LCD_RES_Set()  GPIO_SetPin(LCD_SPI_REST,GPIO_HIGH)
 #define LCD_RES_Clr()  set_pca9557_io_low(5) //RES
@@ -39,8 +29,10 @@
 #define LCD_DC_Clr()   GPIO_SetPin(LCD_SPI_DC,GPIO_LOW)//DC
 #define LCD_DC_Set()   GPIO_SetPin(LCD_SPI_DC,GPIO_HIGH)
  		     
-#define LCD_CS_Clr()   GPIO_SetPin(LCD_SPI_CS,GPIO_LOW)//CS
-#define LCD_CS_Set()   GPIO_SetPin(LCD_SPI_CS,GPIO_HIGH)
+//#define LCD_CS_Clr()   GPIO_SetPin(LCD_SPI_CS,GPIO_LOW)//CS
+//#define LCD_CS_Set()   GPIO_SetPin(LCD_SPI_CS,GPIO_HIGH)
+#define LCD_CS_Clr()  set_pca9557_io_low(0)//CS
+#define LCD_CS_Set()  set_pca9557_io_high(0)
 
 //#define LCD_BLK_Clr()  GPIO_SetPin(LCD_SPI_BCK,GPIO_LOW)//BLK
 //#define LCD_BLK_Set()  GPIO_SetPin(LCD_SPI_BCK,GPIO_HIGH)

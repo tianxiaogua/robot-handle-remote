@@ -11,6 +11,7 @@
 
 void ledc_init(void)
 {
+	int32 ret = 0;
 	// 设置LEDC周边配置
 	// 准备并应用LEDC PWM定时器配置
 	ledc_timer_config_t ledc_timer1 = {
@@ -20,7 +21,10 @@ void ledc_init(void)
 		.freq_hz          = 5000,  // 频率单位为赫兹。频率设定为5千赫
 		.clk_cfg          = LEDC_AUTO_CLK
 	};
-	ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer1));
+	ret = ledc_timer_config(&ledc_timer1);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_timer1 config ERROR!");
+	}
 
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel1 = {
@@ -32,7 +36,10 @@ void ledc_init(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel1));
+	ret = ledc_channel_config(&ledc_channel1);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_channel1 config ERROR!");
+	}
 
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel2 = {
@@ -44,7 +51,10 @@ void ledc_init(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel2));
+	ret = ledc_channel_config(&ledc_channel2);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_channel2 config ERROR!");
+	}
 
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel3 = {
@@ -56,7 +66,10 @@ void ledc_init(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel3));
+	ret = ledc_channel_config(&ledc_channel3);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_channel3 config ERROR!");
+	}
 
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel4 = {
@@ -68,8 +81,10 @@ void ledc_init(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel4));
-
+	ret = ledc_channel_config(&ledc_channel4);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_channel4 config ERROR!");
+	}
 	// 准备并应用LEDC PWM通道配置
 	ledc_channel_config_t ledc_channel5 = {
 		.speed_mode     = LEDC_LOW_SPEED_MODE,
@@ -80,13 +95,16 @@ void ledc_init(void)
 		.duty           = 0, // Set duty to 0%
 		.hpoint         = 0
 	};
-	ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel5));
+	ret = ledc_channel_config(&ledc_channel5);
+	if (ret != ESP_OK) {
+		GUA_LOGE("led timer ledc_channel5 config ERROR!");
+	}
 }
 
 void ledc_set(ledc_channel_t channel, uint32_t duty)
 {
 	 // 设置占空比50%   ((2 ** 13) - 1) * 50% = 4095
-	ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, channel,duty));
+	ledc_set_duty(LEDC_LOW_SPEED_MODE, channel,duty);
 	// Update duty to apply the new value
-	ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, channel));
+	ledc_update_duty(LEDC_LOW_SPEED_MODE, channel);
 }
