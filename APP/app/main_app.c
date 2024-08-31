@@ -73,8 +73,9 @@ void usb_task()
 
 esp_err_t init_app(void)
 {
-	muc_starting_up(); // 开机过程
+	int32 ret = 0;
 	printf("\n\n-----------------ESP32 GAMEPAD----------------------\nV1.0.0 -HRAD V1.3\n\n");
+	muc_starting_up(); // 开机过程
 	init_beep();
 	play_beep_ding();
 	driver_init_ADC();
@@ -84,17 +85,19 @@ esp_err_t init_app(void)
 	LCD_Fill(0,0,LCD_W,LCD_H,0xFFFF);
 
 	// 对MPU6050进行测试
-	if(MPU_Init()){ //初始化
-		GUA_LOGI("MPU_Init\r\n");
+	GUA_LOGI("start mpu init");
+	ret = MPU_Init();
+	if (ret != REV_OK){ //初始化
+		GUA_LOGE("mpu init error!");
 	}
-
+	GUA_LOGI("start mpu dmp lib init");
 	while(mpu_dmp_init()) {//初始化 MPU6050的DMP
 		while(1) {
-			GUA_LOGE("error\r\n");
+			GUA_LOGE("error");
 			delay_ms(500);
 		}
 	}
-	GUA_LOGI("init mpu 6050 done\r\n");
+	GUA_LOGI("init mpu 6050 done");
 
 	return ESP_OK;
 }

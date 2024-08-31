@@ -18,20 +18,6 @@
 #include "nvs_flash.h"
 #include "esp_netif.h"
 
-#define NAMESPACE "list"
-
-NVS_GAMEPAD_TYPE nvs_gamepad = {
-	.lift_stick_x        = "lift_stick_x",
-	.lift_stick_x_value  = 0,
-	.lift_stick_y        = "lift_stick_y",
-	.lift_stick_y_value  = 0,
-	.right_stick_x       = "right_stick_x",
-	.right_stick_x_value = 0,
-	.right_stick_y       = "right_stick_y",
-	.right_stick_y_value = 0
-};
-
-
 void driver_nvs_set_u32(nvs_handle nvs_handler, char* namespace_name, char* key, uint32_t value)
 {
 	esp_err_t ret;
@@ -41,17 +27,18 @@ void driver_nvs_set_u32(nvs_handle nvs_handler, char* namespace_name, char* key,
 		GUA_LOGE("init flash error!");
 	}
 
-	ret = nvs_open(NAMESPACE, NVS_READWRITE, &nvs_handler);
+	ret = nvs_open(namespace_name, NVS_READWRITE, &nvs_handler);
 	if (ret != ESP_OK) {
 		GUA_LOGE("open flash error!");
 	}
-	nvs_set_u32(nvs_handler,"lift_stick_x",value);
+	GUA_LOGW("save int data to flash! name:%s key:%s data:%ld", namespace_name, key, value); // 数据保存至flash
+	nvs_set_u32(nvs_handler, key, value);
 	nvs_commit(nvs_handler);
 	nvs_close(nvs_handler);
 }
 
 
-void driver_nvs_get_u32(nvs_handle nvs_handler, char* namespace_name, char* key, uint32_t* out_value)
+void driver_nvs_get_u32(nvs_handle nvs_handler, char* namespace_name, char* key, uint32_t* value)
 {
 	esp_err_t ret;
 
@@ -60,12 +47,11 @@ void driver_nvs_get_u32(nvs_handle nvs_handler, char* namespace_name, char* key,
 		GUA_LOGE("init flash error!");
 	}
 
-	ret = nvs_open(NAMESPACE, NVS_READONLY, &nvs_handler);
+	ret = nvs_open(namespace_name, NVS_READONLY, &nvs_handler);
 	if (ret != ESP_OK) {
 		GUA_LOGE("open flash error!");
 	}
-
-	nvs_get_u32(nvs_handler, "lift_stick_x", out_value);
+	nvs_get_u32(nvs_handler, key, value);
 	nvs_commit(nvs_handler); /* 提交 */
 	nvs_close(nvs_handler);                     /* 关闭 */
 }

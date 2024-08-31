@@ -29,9 +29,9 @@
 #define GUA_LOGW(format, ...) printf("\033[33m["__FILE__"][Line: %d %s]:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
 #define GUA_LOGE(format, ...) printf("\033[31m["__FILE__"][Line: %d %s]:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
 #elif __DEBUG == 2
-#define GUA_LOGI(format, ...) printf("\033[32m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
-#define GUA_LOGW(format, ...) printf("\033[33m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
-#define GUA_LOGE(format, ...) printf("\033[31m["__FILE__" Line: %d]%s:"format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGI(format, ...) printf("\033[32m["__FILE__" Line: %d] %s: "format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGW(format, ...) printf("\033[33m["__FILE__" Line: %d] %s: "format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
+#define GUA_LOGE(format, ...) printf("\033[31m["__FILE__" Line: %d] %s: "format"\033[32;0m\n", __LINE__, __func__, ##__VA_ARGS__)
 #elif __DEBUG == 3
 #define GUA_LOGI(format, ...) printf("\033[32m["__FILE__" Line: %d] "format"\033[32;0m\n", __LINE__, ##__VA_ARGS__)
 #define GUA_LOGW(format, ...) printf("\033[33m["__FILE__" Line: %d] "format"\033[32;0m\n", __LINE__, ##__VA_ARGS__)

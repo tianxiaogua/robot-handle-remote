@@ -37,6 +37,32 @@
 
 // 模拟引脚输入
 
+typedef struct nvs_gamepad_ 
+{
+	nvs_handle nvs_handler;
+	char namespace[32];
+	char lift_stick_x[32]; // 左摇杆数值x
+	uint32_t lift_stick_x_value;
+	char lift_stick_y[32]; // 左摇杆数值y
+	uint32_t lift_stick_y_value;
+	char right_stick_x[32]; // 右摇杆数值x
+	uint32_t right_stick_x_value;
+	char right_stick_y[32]; // 右摇杆数值y
+	uint32_t right_stick_y_value;
+} NVS_GAMEPAD_TYPE;
+
+NVS_GAMEPAD_TYPE nvs_gamepad = {
+	.namespace           = "key_list",
+	.lift_stick_x        = "lift_stick_x",
+	.lift_stick_x_value  = 0,
+	.lift_stick_y        = "lift_stick_y",
+	.lift_stick_y_value  = 0,
+	.right_stick_x       = "right_stick_x",
+	.right_stick_x_value = 0,
+	.right_stick_y       = "right_stick_y",
+	.right_stick_y_value = 0
+};
+
 typedef struct keyboard_cfg_
 {
 	uint16_t shutdown_time;// 关机
@@ -99,6 +125,10 @@ static int32 app_calibration_rocker(void)
 	g_key_detection.ca_calue_LY = nvs_gamepad.lift_stick_y_value;
 	g_key_detection.ca_calue_RX = nvs_gamepad.right_stick_x_value;
 	g_key_detection.ca_calue_RY = nvs_gamepad.right_stick_y_value;
+	GUA_LOGI("read ca_calue_LX value:%d", g_key_detection.ca_calue_LX);
+	GUA_LOGI("read ca_calue_LY value:%d", g_key_detection.ca_calue_LY);
+	GUA_LOGI("read ca_calue_RX value:%d", g_key_detection.ca_calue_RX);
+	GUA_LOGI("read ca_calue_RY value:%d", g_key_detection.ca_calue_RY);
 
 	nvs_gamepad.lift_stick_x_value = 0;
 	if (nvs_gamepad.lift_stick_x_value == 0) { // || nvs_gamepad.lift_stick_y_value == 0 || nvs_gamepad.right_stick_x_value == 0 || nvs_gamepad.right_stick_y_value == 0) { // 没有校准数据，重新校准摇杆
@@ -107,10 +137,10 @@ static int32 app_calibration_rocker(void)
 			temp_value[1] += get_adc_data(ADC_CHANNEL_4); // LY
 			temp_value[2] += get_adc_data(ADC_CHANNEL_2); // RX
 			temp_value[3] += get_adc_data(ADC_CHANNEL_1); // RY
-			GUA_LOGI("get calibration rocker:%d %d %d %d\n", temp_value[0], temp_value[1], temp_value[2], temp_value[3]);
+			// GUA_LOGI("get calibration rocker:%d %d %d %d", temp_value[0], temp_value[1], temp_value[2], temp_value[3]);
 			delay_ms(1);
 		}
-		GUA_LOGW("get average calibration rocker:%d %d %d %d\n", temp_value[0]/10, temp_value[1]/10, temp_value[2]/10, temp_value[3]/10);
+		GUA_LOGW("get average calibration rocker:%d %d %d %d", temp_value[0]/10, temp_value[1]/10, temp_value[2]/10, temp_value[3]/10);
 		g_key_detection.ca_calue_LX = temp_value[0]/10;
 		g_key_detection.ca_calue_LY = temp_value[1]/10;
 		g_key_detection.ca_calue_RX = temp_value[2]/10;
